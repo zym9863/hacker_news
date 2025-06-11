@@ -108,7 +108,7 @@ class AppTheme {
         color: deepSpaceBlack.withOpacity(0.6),
       ),
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       elevation: 6,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),
@@ -186,7 +186,7 @@ class AppTheme {
         color: Colors.white.withOpacity(0.6),
       ),
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       elevation: 6,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),
