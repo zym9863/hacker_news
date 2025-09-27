@@ -59,30 +59,51 @@ class _LoadingAnimationState extends State<LoadingAnimation> with SingleTickerPr
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // ASCII动画
+          // ASCII动画 - 增强的视觉设计
           Container(
-            width: 200,
-            height: 120,
-            padding: const EdgeInsets.all(16),
+            width: 220,
+            height: 130,
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: isDarkMode ? AppTheme.darkSurface : Colors.white,
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isDarkMode ? Colors.white24 : Colors.black12,
                 width: 1,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
+                  blurRadius: isDarkMode ? 16 : 8,
+                  offset: const Offset(0, isDarkMode ? 6 : 4),
+                  spreadRadius: isDarkMode ? 2 : 1,
+                ),
+                if (isDarkMode)
+                  BoxShadow(
+                    color: AppTheme.primaryColor.withOpacity(0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 0),
+                    spreadRadius: 0,
+                  ),
+              ],
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 终端风格标题栏
+                // 终端风格标题栏 - 增强的视觉设计
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
-                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  margin: const EdgeInsets.only(bottom: 12),
                   decoration: BoxDecoration(
-                    color: isDarkMode ? Colors.white10 : Colors.black.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(2),
+                    gradient: LinearGradient(
+                      colors: isDarkMode 
+                          ? [Colors.white.withOpacity(0.15), Colors.white.withOpacity(0.05)]
+                          : [Colors.black.withOpacity(0.08), Colors.black.withOpacity(0.03)],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(6),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,

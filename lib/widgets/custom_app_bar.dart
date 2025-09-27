@@ -21,22 +21,30 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       decoration: BoxDecoration(
         gradient: isDarkMode
             ? const LinearGradient(
-                colors: [Color(0xFF242424), Color(0xFF1A1A1A)],
+                colors: [Color(0xFF2A2A2A), Color(0xFF1A1A1A)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               )
             : AppTheme.primaryGradient,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+            spreadRadius: 1,
           ),
+          if (isDarkMode)
+            BoxShadow(
+              color: AppTheme.primaryColor.withOpacity(0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 0),
+              spreadRadius: 0,
+            ),
         ],
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Row(
             children: [
               // 返回按钮
@@ -74,18 +82,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget _buildLogo(bool isDarkMode) {
     return Container(
-      width: 24,
-      height: 24,
+      width: 28,
+      height: 28,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(6),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Center(
         child: Text(
           'Y',
           style: TextStyle(
             fontFamily: AppTheme.codeFontFamily,
-            fontSize: 16,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: isDarkMode ? AppTheme.darkPrimaryColor : AppTheme.primaryColor,
           ),
@@ -95,5 +110,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(56);
+  Size get preferredSize => const Size.fromHeight(64);
 }

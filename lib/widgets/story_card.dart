@@ -28,37 +28,59 @@ class StoryCard extends StatelessWidget {
     final Color indicatorColor = _getIndicatorColor(index);
     
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: isDarkMode ? AppTheme.darkSurface : Colors.white,
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.1),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
+            color: Colors.black.withOpacity(isDarkMode ? 0.25 : 0.08),
+            blurRadius: isDarkMode ? 16 : 12,
+            offset: const Offset(0, isDarkMode ? 6 : 4),
+            spreadRadius: isDarkMode ? 2 : 1,
           ),
+          if (isDarkMode)
+            BoxShadow(
+              color: AppTheme.primaryColor.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 0),
+              spreadRadius: 0,
+            ),
         ],
       ),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // 左侧色彩标记条
+            // 左侧色彩标记条 - 增强的视觉效果
             Container(
-              width: 4,
+              width: 5,
               decoration: BoxDecoration(
-                color: indicatorColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(4),
-                  bottomLeft: Radius.circular(4),
+                gradient: LinearGradient(
+                  colors: [
+                    indicatorColor,
+                    indicatorColor.withOpacity(0.7),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  bottomLeft: Radius.circular(12),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: indicatorColor.withOpacity(0.3),
+                    blurRadius: 4,
+                    offset: const Offset(2, 0),
+                  ),
+                ],
               ),
             ),
             // 主要内容
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -66,22 +88,38 @@ class StoryCard extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // 排名指示器
+                        // 排名指示器 - 增强的视觉设计
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          margin: const EdgeInsets.only(right: 8, top: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          margin: const EdgeInsets.only(right: 12, top: 2),
                           decoration: BoxDecoration(
-                            color: isDarkMode 
-                                ? AppTheme.darkPrimaryColor.withOpacity(0.2) 
-                                : AppTheme.primaryColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(4),
+                            gradient: LinearGradient(
+                              colors: isDarkMode 
+                                  ? [
+                                      AppTheme.darkPrimaryColor.withOpacity(0.2),
+                                      AppTheme.darkPrimaryColor.withOpacity(0.1),
+                                    ]
+                                  : [
+                                      AppTheme.primaryColor.withOpacity(0.15),
+                                      AppTheme.primaryColor.withOpacity(0.05),
+                                    ],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: isDarkMode 
+                                  ? AppTheme.darkPrimaryColor.withOpacity(0.3)
+                                  : AppTheme.primaryColor.withOpacity(0.2),
+                              width: 1,
+                            ),
                           ),
                           child: Text(
                             '${index + 1}',
                             style: TextStyle(
                               fontFamily: AppTheme.codeFontFamily,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
                               color: isDarkMode 
                                   ? AppTheme.darkPrimaryColor 
                                   : AppTheme.primaryColor,
@@ -98,23 +136,33 @@ class StoryCard extends StatelessWidget {
                               return Text(
                                 snapshot.data ?? story.title,
                                 style: TextStyle(
-                                  fontFamily: AppTheme.titleFontFamily,
-                                  fontWeight: FontWeight.w500,
+                                  fontFamily: AppTheme.bodyFontFamily,
+                                  fontWeight: FontWeight.w600,
                                   fontSize: 16,
                                   height: 1.4,
-                                  letterSpacing: 0.2,
+                                  letterSpacing: -0.2,
                                   color: isDarkMode ? Colors.white : AppTheme.deepSpaceBlack,
                                 ),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
                               );
                             },
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    // 元数据行
-                    Row(
-                      children: [
+                    const SizedBox(height: 12),
+                    // 元数据行 - 增强的视觉层次
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: isDarkMode 
+                            ? Colors.white.withOpacity(0.05) 
+                            : Colors.black.withOpacity(0.03),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
                         // 分数
                         _buildMetadataItem(
                           context,
@@ -151,6 +199,8 @@ class StoryCard extends StatelessWidget {
                           isDarkMode,
                         ),
                       ],
+                      ),
+                    ),
                     ),
                   ],
                 ),
@@ -165,17 +215,25 @@ class StoryCard extends StatelessWidget {
   Widget _buildMetadataItem(BuildContext context, IconData icon, String text, Color color, bool isDarkMode) {
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 14,
-          color: color,
+        Container(
+          padding: const EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Icon(
+            icon,
+            size: 14,
+            color: color,
+          ),
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: 6),
         Text(
           text,
           style: TextStyle(
             fontFamily: AppTheme.secondaryFontFamily,
             fontSize: 12,
+            fontWeight: FontWeight.w500,
             color: color,
           ),
         ),

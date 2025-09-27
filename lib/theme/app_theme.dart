@@ -34,28 +34,42 @@ class AppTheme {
   // 动画曲线
   static const Curve standardCurve = Curves.easeInOutQuad;
   
-  // 卡片样式
+  // 卡片样式 - 增强的阴影和圆角
   static final BoxDecoration cardDecoration = BoxDecoration(
     color: Colors.white,
-    borderRadius: BorderRadius.circular(4),
+    borderRadius: BorderRadius.circular(8),
     boxShadow: [
       BoxShadow(
-        color: Colors.black.withOpacity(0.1),
+        color: Colors.black.withOpacity(0.08),
+        blurRadius: 12,
+        offset: const Offset(0, 4),
+        spreadRadius: 1,
+      ),
+      BoxShadow(
+        color: Colors.black.withOpacity(0.04),
         blurRadius: 6,
-        offset: const Offset(0, 3),
+        offset: const Offset(0, 2),
+        spreadRadius: 0,
       ),
     ],
   );
   
-  // 暗黑模式卡片样式
+  // 暗黑模式卡片样式 - 增强的阴影和发光效果
   static final BoxDecoration darkCardDecoration = BoxDecoration(
     color: darkSurface,
-    borderRadius: BorderRadius.circular(4),
+    borderRadius: BorderRadius.circular(8),
     boxShadow: [
       BoxShadow(
-        color: Colors.black.withOpacity(0.2),
-        blurRadius: 6,
-        offset: const Offset(0, 3),
+        color: Colors.black.withOpacity(0.3),
+        blurRadius: 16,
+        offset: const Offset(0, 6),
+        spreadRadius: 2,
+      ),
+      BoxShadow(
+        color: primaryColor.withOpacity(0.05),
+        blurRadius: 8,
+        offset: const Offset(0, 0),
+        spreadRadius: 0,
       ),
     ],
   );
