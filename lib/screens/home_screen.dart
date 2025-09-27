@@ -67,36 +67,93 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: CustomAppBar(
         title: localizations.appTitle,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.dark_mode, color: Colors.white),
-            onPressed: () {
-              Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
-            },
+          Container(
+            margin: const EdgeInsets.only(right: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: IconButton(
+              icon: Icon(
+                isDarkMode ? Icons.light_mode : Icons.dark_mode, 
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+              },
+              tooltip: isDarkMode ? 'Light Mode' : 'Dark Mode',
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.settings, color: Colors.white),
-            onPressed: () {
-              Navigator.pushNamed(context, '/settings');
-            },
+          Container(
+            margin: const EdgeInsets.only(right: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.settings, color: Colors.white),
+              onPressed: () {
+                Navigator.pushNamed(context, '/settings');
+              },
+              tooltip: 'Settings',
+            ),
           ),
         ],
       ),
-      body: _error != null
-          ? _buildErrorWidget()
-          : SmartRefresher(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: isDarkMode
+              ? LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppTheme.darkBackground,
+                    AppTheme.darkBackground.withOpacity(0.95),
+                  ],
+                )
+              : LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white,
+                    Colors.grey.shade50,
+                  ],
+                ),
+        ),
+        child: _error != null
+            ? _buildErrorWidget()
+            : SmartRefresher(
               controller: _refreshController,
               onRefresh: _loadStories,
               header: WaterDropHeader(
-                waterDropColor: isDarkMode ? Colors.white : Colors.orange,
-                complete: Text(
-                  localizations.refreshComplete,
-                  style: TextStyle(color: isDarkMode ? Colors.white70 : Colors.black54),
+                waterDropColor: isDarkMode 
+                    ? AppTheme.darkPrimaryColor 
+                    : AppTheme.primaryColor,
+                complete: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: isDarkMode 
+                        ? AppTheme.darkPrimaryColor.withOpacity(0.1)
+                        : AppTheme.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Text(
+                    localizations.refreshComplete,
+                    style: TextStyle(
+                      color: isDarkMode 
+                          ? AppTheme.darkPrimaryColor 
+                          : AppTheme.primaryColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ),
               child: _isLoading && _stories.isEmpty
                   ? _buildLoadingWidget()
                   : _buildStoryList(),
             ),
+        ),
     );
   }
 
@@ -129,31 +186,35 @@ class _HomeScreenState extends State<HomeScreen> {
         return AnimatedContainer(
           duration: Duration(milliseconds: 100 + (index * 50)),
           curve: Curves.easeOutQuart,
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      StoryDetailScreen(story: story),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    const begin = Offset(0.0, 1.0);
-                    const end = Offset.zero;
-                    const curve = Curves.easeInOutQuart;
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        StoryDetailScreen(story: story),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      const begin = Offset(0.0, 1.0);
+                      const end = Offset.zero;
+                      const curve = Curves.easeInOutQuart;
 
-                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-                    return SlideTransition(
-                      position: animation.drive(tween),
-                      child: child,
-                    );
-                  },
-                ),
-              );
-            },
-            child: StoryCard(
-              story: story,
-              index: index,
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: child,
+                      );
+                    },
+                  ),
+                );
+              },
+              child: StoryCard(
+                story: story,
+                index: index,
+              ),
             ),
           ),
         );
