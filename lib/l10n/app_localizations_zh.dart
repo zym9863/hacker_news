@@ -55,6 +55,21 @@ class AppLocalizationsZh extends AppLocalizations {
   
   @override
   String get emptyStories => '没有可用的文章';
+
+  @override
+  String get commentsTitle => '评论';
+
+  @override
+  String get loadingComments => '加载评论中...';
+
+  @override
+  String get noComments => '暂无评论';
+
+  @override
+  String get commentsCount => '条评论';
+
+  @override
+  String get replyTo => '回复';
   
   @override
   Future<String> translateStoryTitle(String originalTitle) async {

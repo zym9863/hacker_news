@@ -53,6 +53,21 @@ class AppLocalizationsEn extends AppLocalizations {
   
   @override
   String get emptyStories => 'No stories available';
+
+  @override
+  String get commentsTitle => 'Comments';
+
+  @override
+  String get loadingComments => 'Loading comments...';
+
+  @override
+  String get noComments => 'No comments yet';
+
+  @override
+  String get commentsCount => 'comments';
+
+  @override
+  String get replyTo => 'Reply to';
   
   @override
   Future<String> translateStoryTitle(String originalTitle) {

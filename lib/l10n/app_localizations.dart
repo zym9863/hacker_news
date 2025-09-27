@@ -49,6 +49,13 @@ abstract class AppLocalizations {
   String get openInBrowser;
   String get refreshComplete;
   String get emptyStories;
+
+  // 评论相关
+  String get commentsTitle;
+  String get loadingComments;
+  String get noComments;
+  String get commentsCount;
+  String get replyTo;
   
   // 故事标题翻译
   Future<String> translateStoryTitle(String originalTitle);
