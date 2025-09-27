@@ -156,25 +156,55 @@ class SettingsScreen extends StatelessWidget {
     required Widget trailing,
     required bool isDarkMode,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      decoration: BoxDecoration(
+        color: isDarkMode 
+            ? AppTheme.darkSurface.withOpacity(0.7)
+            : Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDarkMode ? Colors.white12 : Colors.black.withOpacity(0.08),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.06),
+            blurRadius: isDarkMode ? 12 : 8,
+            offset: const Offset(0, isDarkMode ? 4 : 2),
+            spreadRadius: isDarkMode ? 1 : 0,
+          ),
+        ],
+      ),
       child: Row(
         children: [
-          Icon(
-            icon,
-            size: 22,
-            color: isDarkMode ? AppTheme.darkPrimaryColor : AppTheme.primaryColor,
-          ),
-          const SizedBox(width: 16),
-          Text(
-            title,
-            style: TextStyle(
-              fontFamily: AppTheme.secondaryFontFamily,
-              fontSize: 16,
-              color: isDarkMode ? Colors.white : AppTheme.deepSpaceBlack,
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: isDarkMode 
+                  ? AppTheme.darkPrimaryColor.withOpacity(0.1)
+                  : AppTheme.primaryColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icon,
+              size: 22,
+              color: isDarkMode ? AppTheme.darkPrimaryColor : AppTheme.primaryColor,
             ),
           ),
-          const Spacer(),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontFamily: AppTheme.secondaryFontFamily,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: isDarkMode ? Colors.white : AppTheme.deepSpaceBlack,
+              ),
+            ),
+          ),
           trailing,
         ],
       ),

@@ -8,11 +8,42 @@ import '../providers/language_provider.dart';
 import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 
-class StoryCard extends StatelessWidget {
+class StoryCard extends StatefulWidget {
   final Story story;
   final int index;
 
   const StoryCard({super.key, required this.story, required this.index});
+
+  @override
+  State<StoryCard> createState() => _StoryCardState();
+}
+
+class _StoryCardState extends State<StoryCard> with SingleTickerProviderStateMixin {
+  bool _isHovered = false;
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.02,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,63 +51,80 @@ class StoryCard extends StatelessWidget {
     final locale = Provider.of<LanguageProvider>(context).locale;
     final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
     final timeAgoString = timeago.format(
-      DateTime.fromMillisecondsSinceEpoch(story.time * 1000),
+      DateTime.fromMillisecondsSinceEpoch(widget.story.time * 1000),
       locale: locale.languageCode,
     );
 
     // 根据索引生成不同的颜色，使列表更有层次感
-    final Color indicatorColor = _getIndicatorColor(index);
+    final Color indicatorColor = _getIndicatorColor(widget.index);
     
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: isDarkMode ? AppTheme.darkSurface : Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.25 : 0.08),
-            blurRadius: isDarkMode ? 16 : 12,
-            offset: const Offset(0, isDarkMode ? 6 : 4),
-            spreadRadius: isDarkMode ? 2 : 1,
-          ),
-          if (isDarkMode)
-            BoxShadow(
-              color: AppTheme.primaryColor.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 0),
-              spreadRadius: 0,
-            ),
-        ],
-      ),
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // 左侧色彩标记条 - 增强的视觉效果
-            Container(
-              width: 5,
+    return MouseRegion(
+      onEnter: (_) {
+        setState(() => _isHovered = true);
+        _animationController.forward();
+      },
+      onExit: (_) {
+        setState(() => _isHovered = false);
+        _animationController.reverse();
+      },
+      child: AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    indicatorColor,
-                    indicatorColor.withOpacity(0.7),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  bottomLeft: Radius.circular(12),
-                ),
+                color: isDarkMode ? AppTheme.darkSurface : Colors.white,
+                borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: indicatorColor.withOpacity(0.3),
-                    blurRadius: 4,
-                    offset: const Offset(2, 0),
+                    color: Colors.black.withOpacity(isDarkMode ? 0.25 : 0.08),
+                    blurRadius: _isHovered ? (isDarkMode ? 20 : 16) : (isDarkMode ? 16 : 12),
+                    offset: Offset(0, _isHovered ? (isDarkMode ? 8 : 6) : (isDarkMode ? 6 : 4)),
+                    spreadRadius: _isHovered ? (isDarkMode ? 3 : 2) : (isDarkMode ? 2 : 1),
                   ),
+                  if (isDarkMode)
+                    BoxShadow(
+                      color: AppTheme.primaryColor.withOpacity(_isHovered ? 0.08 : 0.05),
+                      blurRadius: 8,
+                      offset: const Offset(0, 0),
+                      spreadRadius: 0,
+                    ),
                 ],
               ),
-            ),
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // 左侧色彩标记条 - 增强的视觉效果
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: _isHovered ? 6 : 5,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            indicatorColor,
+                            indicatorColor.withOpacity(0.7),
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          bottomLeft: Radius.circular(12),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: indicatorColor.withOpacity(_isHovered ? 0.4 : 0.3),
+                            blurRadius: _isHovered ? 6 : 4,
+                            offset: const Offset(2, 0),
+                          ),
+                        ],
+                      ),
+                    ),
             // 主要内容
             Expanded(
               child: Padding(
@@ -167,7 +215,7 @@ class StoryCard extends StatelessWidget {
                         _buildMetadataItem(
                           context,
                           Icons.arrow_upward,
-                          '${story.score}',
+                          '${widget.story.score}',
                           AppTheme.safetyGreen,
                           isDarkMode,
                         ),
@@ -176,7 +224,7 @@ class StoryCard extends StatelessWidget {
                         _buildMetadataItem(
                           context,
                           Icons.person_outline,
-                          story.by,
+                          widget.story.by,
                           isDarkMode ? Colors.white70 : Colors.black54,
                           isDarkMode,
                         ),
@@ -194,7 +242,7 @@ class StoryCard extends StatelessWidget {
                         _buildMetadataItem(
                           context,
                           Icons.comment_outlined,
-                          '${story.descendants}',
+                          '${widget.story.descendants}',
                           AppTheme.codeBlue,
                           isDarkMode,
                         ),
@@ -207,6 +255,7 @@ class StoryCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
         ),
       ),
     );

@@ -123,21 +123,38 @@ class _HomeScreenState extends State<HomeScreen> {
     
     return ListView.builder(
       itemCount: _stories.length,
-      padding: const EdgeInsets.only(top: 8, bottom: 16),
+      padding: const EdgeInsets.only(top: 12, bottom: 20),
       itemBuilder: (context, index) {
         final story = _stories[index];
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => StoryDetailScreen(story: story),
-              ),
-            );
-          },
-          child: StoryCard(
-            story: story,
-            index: index,
+        return AnimatedContainer(
+          duration: Duration(milliseconds: 100 + (index * 50)),
+          curve: Curves.easeOutQuart,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      StoryDetailScreen(story: story),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(0.0, 1.0);
+                    const end = Offset.zero;
+                    const curve = Curves.easeInOutQuart;
+
+                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            },
+            child: StoryCard(
+              story: story,
+              index: index,
+            ),
           ),
         );
       },

@@ -20,9 +20,9 @@ class AppTheme {
     end: Alignment.centerRight,
   );
   
-  // 暗黑模式颜色
-  static const Color darkBackground = Color(0xFF121212);
-  static const Color darkSurface = Color(0xFF242424);
+  // 暗黑模式颜色 - 增强对比度
+  static const Color darkBackground = Color(0xFF0F0F0F);
+  static const Color darkSurface = Color(0xFF1E1E1E);
   static const Color darkPrimaryColor = Color(0xFFFF8533);
   
   // 字体
@@ -139,10 +139,13 @@ class AppTheme {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
         ),
+        elevation: 2,
       ),
     ),
+    // 增强的焦点指示器
+    focusColor: primaryColor.withOpacity(0.2),
     iconTheme: IconThemeData(
       color: deepSpaceBlack,
       size: 24,
@@ -201,26 +204,29 @@ class AppTheme {
       ),
     ),
     cardTheme: CardThemeData(
-      elevation: 6,
+      elevation: 8,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(12),
       ),
       color: darkSurface,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: darkPrimaryColor,
-        foregroundColor: Colors.white,
+        foregroundColor: darkBackground,
         textStyle: TextStyle(
           fontFamily: bodyFontFamily,
           fontWeight: FontWeight.w500,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
         ),
+        elevation: 4,
       ),
     ),
+    // 增强的焦点指示器
+    focusColor: darkPrimaryColor.withOpacity(0.3),
     iconTheme: IconThemeData(
       color: Colors.white,
       size: 24,
