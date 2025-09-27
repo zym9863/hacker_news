@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../models/story.dart';
 import '../services/api_service.dart';
 import '../providers/theme_provider.dart';
+import '../theme/app_theme.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/story_card.dart';
 import '../widgets/loading_animation.dart';

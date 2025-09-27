@@ -96,7 +96,7 @@ class _LoadingAnimationState extends State<LoadingAnimation> with TickerProvider
                     BoxShadow(
                       color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
                       blurRadius: isDarkMode ? 16 : 8,
-                      offset: const Offset(0, isDarkMode ? 6 : 4),
+                      offset: Offset(0, isDarkMode ? 6 : 4),
                       spreadRadius: isDarkMode ? 2 : 1,
                     ),
                     if (isDarkMode)

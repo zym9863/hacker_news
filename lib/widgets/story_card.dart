@@ -125,137 +125,139 @@ class _StoryCardState extends State<StoryCard> with SingleTickerProviderStateMix
                         ],
                       ),
                     ),
-            // 主要内容
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 标题
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // 排名指示器 - 增强的视觉设计
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          margin: const EdgeInsets.only(right: 12, top: 2),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: isDarkMode 
-                                  ? [
-                                      AppTheme.darkPrimaryColor.withOpacity(0.2),
-                                      AppTheme.darkPrimaryColor.withOpacity(0.1),
-                                    ]
-                                  : [
-                                      AppTheme.primaryColor.withOpacity(0.15),
-                                      AppTheme.primaryColor.withOpacity(0.05),
-                                    ],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: isDarkMode 
-                                  ? AppTheme.darkPrimaryColor.withOpacity(0.3)
-                                  : AppTheme.primaryColor.withOpacity(0.2),
-                              width: 1,
-                            ),
-                          ),
-                          child: Text(
-                            '${index + 1}',
-                            style: TextStyle(
-                              fontFamily: AppTheme.codeFontFamily,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: isDarkMode 
-                                  ? AppTheme.darkPrimaryColor 
-                                  : AppTheme.primaryColor,
-                            ),
-                          ),
-                        ),
-                        // 标题文本
-                        Expanded(
-                          child: FutureBuilder<String>(
-                            future: locale.languageCode == 'zh' 
-                                ? Future.value(localizations.translateStoryTitle(story.title))
-                                : Future.value(story.title),
-                            builder: (context, snapshot) {
-                              return Text(
-                                snapshot.data ?? story.title,
-                                style: TextStyle(
-                                  fontFamily: AppTheme.bodyFontFamily,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  height: 1.4,
-                                  letterSpacing: -0.2,
-                                  color: isDarkMode ? Colors.white : AppTheme.deepSpaceBlack,
+                    // 主要内容
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 标题
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // 排名指示器 - 增强的视觉设计
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  margin: const EdgeInsets.only(right: 12, top: 2),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: isDarkMode 
+                                          ? [
+                                              AppTheme.darkPrimaryColor.withOpacity(0.2),
+                                              AppTheme.darkPrimaryColor.withOpacity(0.1),
+                                            ]
+                                          : [
+                                              AppTheme.primaryColor.withOpacity(0.15),
+                                              AppTheme.primaryColor.withOpacity(0.05),
+                                            ],
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: isDarkMode 
+                                          ? AppTheme.darkPrimaryColor.withOpacity(0.3)
+                                          : AppTheme.primaryColor.withOpacity(0.2),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '${widget.index + 1}',
+                                    style: TextStyle(
+                                      fontFamily: AppTheme.codeFontFamily,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: isDarkMode 
+                                          ? AppTheme.darkPrimaryColor 
+                                          : AppTheme.primaryColor,
+                                    ),
+                                  ),
                                 ),
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                              );
-                            },
-                          ),
+                                // 标题文本
+                                Expanded(
+                                  child: FutureBuilder<String>(
+                                    future: locale.languageCode == 'zh' 
+                                        ? Future.value(localizations.translateStoryTitle(widget.story.title))
+                                        : Future.value(widget.story.title),
+                                    builder: (context, snapshot) {
+                                      return Text(
+                                        snapshot.data ?? widget.story.title,
+                                        style: TextStyle(
+                                          fontFamily: AppTheme.bodyFontFamily,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                          height: 1.4,
+                                          letterSpacing: -0.2,
+                                          color: isDarkMode ? Colors.white : AppTheme.deepSpaceBlack,
+                                        ),
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            // 元数据行 - 增强的视觉层次
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: isDarkMode 
+                                    ? Colors.white.withOpacity(0.05) 
+                                    : Colors.black.withOpacity(0.03),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: [
+                                  // 分数
+                                  _buildMetadataItem(
+                                    context,
+                                    Icons.arrow_upward,
+                                    '${widget.story.score}',
+                                    AppTheme.safetyGreen,
+                                    isDarkMode,
+                                  ),
+                                  _buildDivider(isDarkMode),
+                                  // 作者
+                                  _buildMetadataItem(
+                                    context,
+                                    Icons.person_outline,
+                                    widget.story.by,
+                                    isDarkMode ? Colors.white70 : Colors.black54,
+                                    isDarkMode,
+                                  ),
+                                  _buildDivider(isDarkMode),
+                                  // 时间
+                                  _buildMetadataItem(
+                                    context,
+                                    Icons.access_time,
+                                    timeAgoString,
+                                    isDarkMode ? Colors.white70 : Colors.black54,
+                                    isDarkMode,
+                                  ),
+                                  _buildDivider(isDarkMode),
+                                  // 评论
+                                  _buildMetadataItem(
+                                    context,
+                                    Icons.comment_outlined,
+                                    '${widget.story.descendants}',
+                                    AppTheme.codeBlue,
+                                    isDarkMode,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    // 元数据行 - 增强的视觉层次
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: isDarkMode 
-                            ? Colors.white.withOpacity(0.05) 
-                            : Colors.black.withOpacity(0.03),
-                        borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Row(
-                        children: [
-                        // 分数
-                        _buildMetadataItem(
-                          context,
-                          Icons.arrow_upward,
-                          '${widget.story.score}',
-                          AppTheme.safetyGreen,
-                          isDarkMode,
-                        ),
-                        _buildDivider(isDarkMode),
-                        // 作者
-                        _buildMetadataItem(
-                          context,
-                          Icons.person_outline,
-                          widget.story.by,
-                          isDarkMode ? Colors.white70 : Colors.black54,
-                          isDarkMode,
-                        ),
-                        _buildDivider(isDarkMode),
-                        // 时间
-                        _buildMetadataItem(
-                          context,
-                          Icons.access_time,
-                          timeAgoString,
-                          isDarkMode ? Colors.white70 : Colors.black54,
-                          isDarkMode,
-                        ),
-                        _buildDivider(isDarkMode),
-                        // 评论
-                        _buildMetadataItem(
-                          context,
-                          Icons.comment_outlined,
-                          '${widget.story.descendants}',
-                          AppTheme.codeBlue,
-                          isDarkMode,
-                        ),
-                      ],
-                      ),
-                    ),
                     ),
                   ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
         ),
       ),
     );
